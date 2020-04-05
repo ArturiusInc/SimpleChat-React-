@@ -1,0 +1,153 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400&display=swap");
+body {
+	margin: 0;
+	font-family: "Nunito Sans", sans-serif;
+}
+h3 {
+	font-size: 14px;
+	padding: 10px;
+}
+ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+button {
+	color: #fff;
+	background-color: #1976d2;
+	box-shadow: 0 0 14px 0 rgba(53, 64, 82, 0.05);
+	min-width: 64px;
+	padding: 6px 16px;
+	border-radius: 4px;
+	border: 0;
+	cursor: pointer;
+}
+button:hover {
+	background-color: rgb(17, 82, 147);
+}
+* {
+	box-sizing: border-box;
+}
+.App {
+	display: flex;
+}
+.login-wrapper {
+	display: flex;
+	align-content: center;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100vh;
+}
+.login-cloud {
+	width: auto;
+	height: auto;
+	padding: 20px;
+	background-color: #d6e2f1;
+	border-radius: 4px;
+}
+p.error {
+	margin: 0;
+	color: red;
+}
+p.error.exist {
+	font-size: 10px;
+	padding-left: 10px;
+}
+.sidebar {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	min-height: 100vh;
+	width: 250px;
+	background-color: #1b2430;
+	color: #eee;
+}
+.new-room {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	flex-wrap: nowrap;
+}
+.new-room form {
+	padding: 10px;
+	display: flex;
+	flex-direction: row;
+	align-content: stretch;
+}
+.new-room input {
+	border: 0;
+	border-radius: 4px 0 0 4px;
+	min-width: 100px;
+	padding: 3px 10px;
+}
+.new-room button {
+	border: 0;
+	border-radius: 0 4px 4px 0;
+}
+.room {
+	display: flex;
+	justify-content: space-between;
+	position: relative;
+	padding: 10px;
+	cursor: pointer;
+}
+.room:hover {
+	background: #00000014;
+}
+.user-count {
+	font-size: 11px;
+	font-weight: 700;
+	height: 20px;
+	padding: 3px;
+	background: #2196f3;
+	border-radius: 16px;
+	color: #000;
+}
+.room-users {
+	overflow: hidden;
+	padding: 0;
+	transition: max-height 1s ease-in-out;
+	max-height: 0;
+}
+.room.active + .room-users {
+	max-height: 1000px;
+}
+.room-user {
+	padding: 5px 5px 5px 20px;
+	color: #a0a0a0;
+}
+
+main {
+	height: 100vh;
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+.send-inchat {
+	padding: 10px;
+	background-color: #ccc;
+}
+.send-inchat input {
+	width: 100%;
+	font-size: 18px;
+	padding: 3px 5px;
+}
+.room-chat {
+	padding: 10px;
+	overflow: auto;
+}
+.message {
+	padding: 5px 0;
+}
+.message p {
+	margin: 0;
+}
+.message-info {
+	color: #0054bf;
+}
+.message-info small {
+	font-size: 0.6em;
+	color: #333e4c;
+}
