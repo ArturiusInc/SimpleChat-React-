@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import Sidebar from "./Sidebar";
 import Chat from "./Chat";
 import Login from "./Login";
-
 import io from "socket.io-client";
-export const socket = io.connect("localhost");
 
 function App() {
 	const [userName, setuserName] = useState(localStorage.getItem("chatUserName"));
@@ -23,3 +21,4 @@ function App() {
 }
 
 export default App;
+export const socket = io.connect("localhost");

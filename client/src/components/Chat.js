@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { socket } from "./App";
 import Message from "./Message";
 
@@ -14,19 +14,22 @@ export default function Chat({ userName }) {
 		});
 	}, []);
 
-	const handlerMessage = (e) =>
-		(() => {
-			e.preventDefault();
-			if (!textMessage) return;
-			const dateOptions = {
-				hour: "numeric",
-				minute: "numeric",
-				second: "numeric",
-			};
-			const date = new Date().toLocaleString("ru", dateOptions);
-			socket.emit("new message", { id: new Date(), message: textMessage, name: userName, date });
-			settextMessage("");
-		})();
+	const handlerMessage = useCallback(
+		(e) =>
+			(() => {
+				e.preventDefault();
+				if (!textMessage) return;
+				const dateOptions = {
+					hour: "numeric",
+					minute: "numeric",
+					second: "numeric",
+				};
+				const date = new Date().toLocaleString("ru", dateOptions);
+				socket.emit("new message", { id: new Date(), message: textMessage, name: userName, date });
+				settextMessage("");
+			})(),
+		[]
+	);
 
 	return (
 		<main>
