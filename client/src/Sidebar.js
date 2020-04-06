@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { socket } from "./App";
 import Room from "./Room";
 
@@ -18,29 +18,35 @@ export default function Sidebar({ userName }) {
 		});
 	}, [setroomsAndUsers]);
 
-	const handlerNewRoomName = (e) => {
+	const handlerNewRoomName = useCallback((e) => {
 		setnewRoomName(e.target.value);
-	};
+	}, []);
 
-	const handlerSendRoomName = (e) => {
-		e.preventDefault();
-		if (newRoomName) {
-			if (!roomsAndUsers.find((room) => room.roomName === newRoomName)) {
-				setnewRoomIsExist(false);
-				socket.emit("new room", newRoomName);
-				setnewRoomName("");
-			} else {
-				setnewRoomIsExist(true);
+	const handlerSendRoomName = useCallback(
+		(e) => {
+			e.preventDefault();
+			if (newRoomName) {
+				if (!roomsAndUsers.find((room) => room.roomName === newRoomName)) {
+					setnewRoomIsExist(false);
+					socket.emit("new room", newRoomName);
+					setnewRoomName("");
+				} else {
+					setnewRoomIsExist(true);
+				}
 			}
-		}
-	};
+		},
+		[newRoomName, roomsAndUsers]
+	);
 
-	const handleChangeRoom = (newRoomName) => {
-		if (channel !== newRoomName) {
-			socket.emit("change room", channel, newRoomName);
-			setChannel(newRoomName);
-		}
-	};
+	const handleChangeRoom = useCallback(
+		(newRoomName) => {
+			if (channel !== newRoomName) {
+				socket.emit("change room", channel, newRoomName);
+				setChannel(newRoomName);
+			}
+		},
+		[channel]
+	);
 
 	return (
 		<div className="sidebar">
