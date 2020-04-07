@@ -28,7 +28,7 @@ export default function Chat({ userName }) {
 				socket.emit("new message", { id: new Date(), message: textMessage, name: userName, date });
 				settextMessage("");
 			})(),
-		[]
+		[textMessage, userName]
 	);
 
 	return (

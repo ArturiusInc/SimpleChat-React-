@@ -1,12 +1,18 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { socket } from "./App";
 import Room from "./Room";
+import { withRouter } from "react-router-dom";
 
-export default function Sidebar({ userName }) {
+function Sidebar({ userName, history }) {
 	const [roomsAndUsers, setroomsAndUsers] = useState([]);
 	const [newRoomName, setnewRoomName] = useState("");
 	const [newRoomIsExist, setnewRoomIsExist] = useState(false);
 	const [channel, setChannel] = useState("defaultChannel");
+
+	useEffect(() => {
+		console.log(history);
+		history.push(channel);
+	}, [channel, history]);
 
 	useEffect(() => {
 		socket.emit("get rooms and users", userName);
@@ -76,3 +82,5 @@ export default function Sidebar({ userName }) {
 		</div>
 	);
 }
+
+export default withRouter(Sidebar);
