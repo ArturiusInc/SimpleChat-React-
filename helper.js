@@ -2,27 +2,37 @@ const users = {};
 const rooms = ["defaultChannel"];
 const roomMessages = {};
 
-function addUser(socket, name) {
-	users[socket.id] = name;
+function chekUserName(socket, userName) {
+	if (Object.values(users).find((i) => i === userName)) {
+		socket.emit("check user name", { type: "userIsUsed" });
+	} else {
+		socket.emit("check user name", { type: "userIsAdded", name: userName });
+	}
 }
-
-function removeUser(socket) {
-	console.log(`a user ${users[socket.id]} disconnected from ???? channel`);
-	delete users[socket.id];
-}
-
 function addRoom(roomName) {
 	rooms.push(roomName);
 }
 
-function addNewMessageInRoom(message, socket, io) {
-	const userChannel = Object.entries(socket.rooms)[1][0];
-	if (roomMessages[userChannel]) {
-		roomMessages[userChannel] = roomMessages[userChannel].concat([message]);
-	} else {
-		roomMessages[userChannel] = [message];
-	}
-	io.in(userChannel).emit("messages", roomMessages[userChannel]);
+function addUser(socketId, name) {
+	users[socketId] = name;
+}
+
+function removeUser(socket) {
+	console.log(`"${users[socket.id]}" disconnected from ???? channel`);
+	delete users[socket.id];
+}
+
+function complex(io, socket, room, userName) {
+	addUser(socket.id, userName);
+	Object.keys(io.sockets.adapter.rooms).forEach((i) => socket.leave(i));
+	socket.join(room);
+	sendMessagesInRoom(io, room);
+	getRoomsAndUsers(io);
+}
+
+// TODO: сделать синхронизацию с базой данных вместо памяти?
+function sendMessagesInRoom(io, room) {
+	io.in(room).emit("messages", roomMessages[room] ? roomMessages[room] : []);
 }
 
 function getRoomsAndUsers(io) {
@@ -38,26 +48,21 @@ function getRoomsAndUsers(io) {
 	io.emit("get rooms and users", allRoomsAndUsers);
 }
 
-function chekUserName(socket, inputUserName) {
-	if (Object.values(users).find((i) => i === inputUserName)) {
-		socket.emit("check user name", { type: "userIsUsed" });
+function addNewMessageInRoom(message, socket, io) {
+	const userChannel = Object.entries(socket.rooms)[0][0];
+	if (roomMessages[userChannel]) {
+		roomMessages[userChannel] = roomMessages[userChannel].concat([message]);
 	} else {
-		addUser((users, socket.id, inputUserName));
-		socket.join("defaultChannel").emit("check user name", { type: "userIsAdded", name: inputUserName });
+		roomMessages[userChannel] = [message];
 	}
-}
-
-// TODO: сдулать синхронизацию с базой данных вместо памяти?
-function sendMessagesInRoom(io, newRoomName) {
-	io.in(newRoomName).emit("messages", roomMessages[newRoomName] ? roomMessages[newRoomName] : []);
+	io.in(userChannel).emit("messages", roomMessages[userChannel]);
 }
 
 module.exports = {
-	addUser,
 	removeUser,
 	addRoom,
 	addNewMessageInRoom,
 	getRoomsAndUsers,
 	chekUserName,
-	sendMessagesInRoom,
+	complex,
 };

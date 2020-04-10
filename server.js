@@ -6,15 +6,7 @@ const path = require("path");
 
 const port = 80;
 
-const {
-	addUser,
-	removeUser,
-	addRoom,
-	addNewMessageInRoom,
-	getRoomsAndUsers,
-	chekUserName,
-	sendMessagesInRoom,
-} = require("./helper");
+const { removeUser, addRoom, addNewMessageInRoom, getRoomsAndUsers, chekUserName, complex } = require("./helper");
 
 app.use(express.static(path.join(__dirname, "client", "public")));
 app.get("/", (req, res) => {
@@ -23,34 +15,19 @@ app.get("/", (req, res) => {
 
 io.on("connection", (socket) => {
 	console.log("a user connected");
-
-	socket.on("check user name", (inputUserName) => {
-		chekUserName(socket, inputUserName);
-	});
-
-	socket.on("change room", (oldRoomName, newRoomName) => {
-		socket.join(newRoomName, () => {
-			socket.leave(oldRoomName, () => {
-				getRoomsAndUsers(io);
-				sendMessagesInRoom(io, newRoomName);
-			});
-		});
-	});
-
-	socket.on("get rooms and users", (userName) => {
-		if (userName) {
-			addUser(socket, userName);
-			socket.join("defaultChannel", () => {
-				getRoomsAndUsers(io);
-			});
-		} else {
-			getRoomsAndUsers(io);
-		}
-	});
+	socket.leave(socket.id);
 
 	socket.on("new room", (roomName) => {
 		addRoom(roomName);
 		getRoomsAndUsers(io);
+	});
+
+	socket.on("check user name", (userName) => {
+		chekUserName(socket, userName);
+	});
+
+	socket.on("enter channel", (room, userName) => {
+		complex(io, socket, room, userName);
 	});
 
 	socket.on("new message", (message) => {

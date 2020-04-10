@@ -3,26 +3,36 @@ import { socket } from "./App";
 import Room from "./Room";
 import { withRouter } from "react-router-dom";
 
-function Sidebar({ userName, history }) {
+function Sidebar({ userName, history, urlChannel }) {
 	const [roomsAndUsers, setroomsAndUsers] = useState([]);
 	const [newRoomName, setnewRoomName] = useState("");
 	const [newRoomIsExist, setnewRoomIsExist] = useState(false);
-	const [channel, setChannel] = useState("defaultChannel");
+	const [channel, setChannel] = useState();
 
 	useEffect(() => {
-		console.log(history);
-		history.push(channel);
-	}, [channel, history]);
+		if (userName) {
+			if (urlChannel) {
+				history.push(urlChannel);
+				setChannel(urlChannel);
+			} else {
+				history.push("defaultChannel");
+				setChannel("defaultChannel");
+			}
+		}
+	}, [userName, history, urlChannel]);
 
 	useEffect(() => {
-		socket.emit("get rooms and users", userName);
-	}, [userName]);
+		if (channel) {
+			history.push(channel);
+			socket.emit("enter channel", channel, userName);
+		}
+	}, [channel, userName]);
 
 	useEffect(() => {
 		socket.on("get rooms and users", (data) => {
 			setroomsAndUsers(data);
 		});
-	}, [setroomsAndUsers]);
+	}, []);
 
 	const handlerNewRoomName = useCallback((e) => {
 		setnewRoomName(e.target.value);
@@ -46,10 +56,7 @@ function Sidebar({ userName, history }) {
 
 	const handleChangeRoom = useCallback(
 		(newRoomName) => {
-			if (channel !== newRoomName) {
-				socket.emit("change room", channel, newRoomName);
-				setChannel(newRoomName);
-			}
+			if (channel !== newRoomName) setChannel(newRoomName);
 		},
 		[channel]
 	);

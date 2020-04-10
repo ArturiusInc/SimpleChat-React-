@@ -1,7 +1,7 @@
 import React from "react";
 import User from "./User";
 
-export default function Room({ room, click, active }) {
+function Room({ room, click, active }) {
 	return (
 		<li>
 			<div className={`room ${active}`} onClick={() => click(room.roomName)}>
@@ -18,3 +18,5 @@ export default function Room({ room, click, active }) {
 		</li>
 	);
 }
+
+export default React.memo(Room);
