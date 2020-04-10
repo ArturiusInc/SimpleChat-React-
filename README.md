@@ -19,8 +19,8 @@ $ npm run dev
 
 ## Todos
 
-- private message
-- emoji
-- routing
-- google auth
-- mongoDB for save messages
+- [] private message
+- [] emoji
+- [x] routing
+- [] google auth
+- [] mongoDB for save messages
