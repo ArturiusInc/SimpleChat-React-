@@ -21,6 +21,6 @@ $ npm run dev
 
 - [ ] private message
 - [ ] emoji
-- [x] routing
+- [x] <s>routing</s>
 - [ ] google auth
 - [ ] mongoDB for save messages
